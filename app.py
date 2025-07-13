@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request
 from groq import Groq
+import os
 
 app = Flask(__name__)
 
