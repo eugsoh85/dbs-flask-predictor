@@ -2,11 +2,14 @@ from flask import Flask, render_template, request
 from groq import Groq
 import joblib
 import os
-from dotenv import load_dotenv
 
 # os.environ['GROQ_API_KEY'] = "gs......."
 # For cloud deployment, ensure the GROQ_API_KEY is set in the environment variables
-load_dotenv()
+
+# Only load .env in development (not needed in production)
+if os.environ.get("RENDER") != "true":
+    from dotenv import load_dotenv
+    load_dotenv()
 
 api_key = os.environ.get("GROQ_API_KEY")
 
