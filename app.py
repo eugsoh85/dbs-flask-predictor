@@ -1,5 +1,14 @@
 from flask import Flask, render_template, request
+from groq import Groq
+import joblib
 import os
+from dotenv import load_dotenv
+
+# os.environ['GROQ_API_KEY'] = "gs......."
+# For cloud deployment, ensure the GROQ_API_KEY is set in the environment variables
+load_dotenv()
+
+api_key = os.environ.get("GROQ_API_KEY")
 
 app = Flask(__name__)
 
@@ -14,6 +23,27 @@ def main():
     # db
     return render_template("main.html")
 
+## Route to handle the LLAMA chatbot page
+@app.route("/llama", methods=["GET","POST"])
+def llama():
+    return render_template("llama.html")
+
+## Route to handle the LLAMA chatbot reply logic
+@app.route("/llama_reply", methods=["POST"])
+def llama_reply():
+    q = request.form.get("q")
+    client = Groq()
+    completion = client.chat.completions.create(
+        model="llama-3.1-8b-instant",
+        messages=[
+            {
+                "role": "user",
+                "content": q
+            }
+        ]
+    )
+    return (render_template("llama_reply.html", r=completion.choices[0].message.content))
+
 ## Route to handle the DBS prediction page
 @app.route("/dbs", methods=["GET","POST"])
 def dbs():
@@ -23,8 +53,13 @@ def dbs():
 @app.route("/prediction", methods=["POST"])
 def prediction():
     q = float(request.form.get("q"))
-    prediction_result = (-50.6 * q) + 90.2
-    return render_template("prediction.html", r=prediction_result)
+    
+     # load model
+    model = joblib.load("dbs.jl")
+    # make prediction
+    pred = model.predict([[q]])
+    
+    return(render_template("prediction.html", r=pred))
 
 if __name__ == "__main__":
     app.run(debug=True)
