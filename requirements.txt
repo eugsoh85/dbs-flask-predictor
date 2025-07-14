@@ -2,4 +2,4 @@ flask==2.3.1
 gunicorn
 groq
 joblib
-sckit-learn
+scikit-learn
