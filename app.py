@@ -28,7 +28,7 @@ def prediction():
 #     completion = client.chat.completions.create(
 #         model="llama3-8b-8192",  # or try "mixtral-8x7b-32768"
 #         messages=[{"role": "user", "content": prompt}]
-    )
+#     )
 #     reply = completion.choices[0].message.content
 #     return render_template("prediction.html", r=reply)
 
