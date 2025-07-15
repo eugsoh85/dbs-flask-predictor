@@ -31,6 +31,11 @@ def main():
 def llama():
     return render_template("llama.html")
 
+## Route to handle the LLAMA chatbot page
+@app.route("/deepseek", methods=["GET","POST"])
+def deepseek():
+    return render_template("deepseek.html")
+
 ## Route to handle the LLAMA chatbot reply logic
 @app.route("/llama_reply", methods=["POST"])
 def llama_reply():
@@ -46,6 +51,22 @@ def llama_reply():
         ]
     )
     return (render_template("llama_reply.html", r=completion.choices[0].message.content))
+
+## Route to handle the DeepSeek chatbot reply logic
+@app.route("/deepseek_reply", methods=["POST"])
+def deepseek_reply():
+    q = request.form.get("q")
+    client = Groq()
+    completion = client.chat.completions.create(
+        model="deepseek-r1-distill-llama-70b",
+        messages=[
+            {
+                "role": "user",
+                "content": q
+            }
+        ]
+    )
+    return (render_template("deepseek_reply.html", r=completion.choices[0].message.content))
 
 ## Route to handle the DBS prediction page
 @app.route("/dbs", methods=["GET","POST"])
