@@ -13,6 +13,7 @@ if os.environ.get("RENDER") != "true":
     load_dotenv()
 
 api_key = os.environ.get("GROQ_API_KEY")
+TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 
 app = Flask(__name__)
 
@@ -89,8 +90,6 @@ def prediction():
 ## Route to handle the Telegram chatbot page
 @app.route("/telegram", methods=["GET","POST"])
 def telegram():
-    
-    TELEGRAM_BOT_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN")
     
     domain_url = 'https://dbs-flask-predictor.onrender.com'
 
