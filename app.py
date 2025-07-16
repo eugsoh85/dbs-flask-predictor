@@ -89,6 +89,7 @@ def prediction():
 ## Route to handle the Telegram chatbot page
 @app.route("/telegram", methods=["GET","POST"])
 def telegram():
+    
     TELEGRAM_BOT_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN")
     
     domain_url = 'https://dbs-flask-predictor.onrender.com'
@@ -107,7 +108,7 @@ def telegram():
     else:
         status = "Failed to start the telegram bot. Please check the logs."
     
-    return render_template("telegram.html")
+    return render_template("telegram.html", status=status)
 
 @app.route("/webhook",methods=["GET","POST"])
 def webhook():
