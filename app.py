@@ -142,20 +142,20 @@ def webhook():
 
 @app.route("/end_telegram", methods=["GET","POST"])
 def end_telegram():
-    
     domain_url = 'https://dbs-flask-predictor.onrender.com'
 
-    # The following line is used to delete the existing webhook URL for the Telegram bot
+    # Delete the existing Telegram webhook
     delete_webhook_url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/deleteWebhook"
-    webhook_response = requests.post(delete_webhook_url, json={"url": domain_url, "drop_pending_updates": True})
+    response = requests.post(delete_webhook_url, json={"drop_pending_updates": True})
 
+    # Log the response (useful on Render logs)
+    print("🛑 Webhook Deletion Response:", response.json())
 
-    if webhook_response.status_code == 200:
-        # set status message
-        status = "The telegram bot session has ended. Thank you for using the bot."
+    if response.status_code == 200 and response.json().get("ok"):
+        status = "✅ Telegram bot session has ended. Webhook successfully deleted."
     else:
-        status = "Failed to start the telegram bot. Please check the logs."
-    
+        status = "❌ Failed to stop the Telegram bot. Please check the logs."
+
     return render_template("telegram.html", status=status)
 
 
