@@ -152,7 +152,7 @@ def end_telegram():
 
     if webhook_response.status_code == 200:
         # set status message
-        status = "The telegram bot is running. Please check with the telegram bot. @sctp_eugsoh_genAI_bot"
+        status = "The telegram bot session has ended. Thank you for using the bot."
     else:
         status = "Failed to start the telegram bot. Please check the logs."
     
