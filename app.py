@@ -2,6 +2,7 @@ from flask import Flask, render_template, request
 from groq import Groq
 import joblib
 import os
+import requests
 
 # os.environ['GROQ_API_KEY'] = "gs......."
 # For cloud deployment, ensure the GROQ_API_KEY is set in the environment variables
