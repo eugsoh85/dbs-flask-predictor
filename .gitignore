@@ -24,4 +24,4 @@ env/
 
 # Deployment
 instance/
-*.db
+# *.db
