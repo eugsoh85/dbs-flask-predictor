@@ -4,6 +4,11 @@ import joblib
 import os
 import requests
 
+import sqlite3
+from flask import g
+import datetime
+from datetime import datetime
+
 # os.environ['GROQ_API_KEY'] = "gs......."
 # For cloud deployment, ensure the GROQ_API_KEY is set in the environment variables
 
@@ -26,7 +31,54 @@ def index():
 def main():
     q = request.form.get("q")
     # db
+    if q:  # only log if a name was submitted
+        import sqlite3
+        import datetime
+        t = datetime.datetime.now()
+
+        conn = sqlite3.connect('user.db')
+        c = conn.cursor()
+        c.execute('INSERT INTO user (name, timestamp) VALUES (?, ?)', (q, t))
+        conn.commit()
+        c.close()
+        conn.close()
+    
     return render_template("main.html")
+
+## Route to handle the user logs page
+@app.route("/users", methods=["POST"])
+def users():
+    conn = sqlite3.connect('user.db')
+    c = conn.cursor()
+    c.execute('SELECT name, timestamp FROM user')
+    raw_logs = c.fetchall()
+    c.close()
+    conn.close()
+
+    if not raw_logs:  # Check if logs are empty
+        return render_template("users.html", message="No logs to display.")
+    
+    # Format timestamps
+    logs = [
+        (name, datetime.strptime(timestamp, "%Y-%m-%d %H:%M:%S.%f").strftime("%d %b %Y, %I:%M %p"))
+        for name, timestamp in raw_logs
+    ]
+    
+    return render_template("users.html", logs=logs)
+
+## Route to handle the deletion of user logs
+@app.route("/delete_log", methods=["POST"])
+def delete_log():
+    import sqlite3
+
+    conn = sqlite3.connect('user.db')
+    c = conn.cursor()
+    c.execute('DELETE FROM user')  # delete all rows from user table
+    conn.commit()
+    c.close()
+    conn.close()
+
+    return render_template("users_delete.html")
 
 ## Route to handle the LLAMA chatbot page
 @app.route("/llama", methods=["GET","POST"])
@@ -157,7 +209,6 @@ def end_telegram():
         status = "❌ Failed to stop the Telegram bot. Please check the logs."
 
     return render_template("telegram.html", status=status)
-
 
 if __name__ == "__main__":
     app.run(debug=True)
