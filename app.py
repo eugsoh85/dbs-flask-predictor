@@ -80,6 +80,12 @@ def delete_log():
 
     return render_template("users_delete.html")
 
+## Route to handle the HF Sepia Transformer page
+@app.route('/sepia', methods=['GET', 'POST'])
+def sepia():
+    return render_template("hf_sepia.html")
+
+
 ## Route to handle the LLAMA chatbot page
 @app.route("/llama", methods=["GET","POST"])
 def llama():
@@ -187,8 +193,6 @@ def webhook():
         # Send the response back to the Telegram chat
         send_message_url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
         requests.post(send_message_url, json={
-            "chat_id": chat_id,
-            "text": response_message
         })
     return('ok', 200)
 
@@ -212,3 +216,4 @@ def end_telegram():
 
 if __name__ == "__main__":
     app.run(debug=True)
+      
